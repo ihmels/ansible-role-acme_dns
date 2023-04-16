@@ -1,0 +1,24 @@
+---
+galaxy_info:
+  role_name: acme_dns
+  namespace: ihmels
+  author: Yannick Ihmels
+  description: Install and configure acme-dns
+  issue_tracker_url: https://github.com/ihmels/ansible-role-acme-dns/issues
+  license: MIT
+  min_ansible_version: "2.12"
+
+  platforms:
+    - name: EL
+      versions:
+        - "9"
+    - name: Fedora
+      versions:
+        - "37"
+
+  galaxy_tags:
+    - acme
+    - dns
+    - dns01
+
+dependencies: []

@@ -1,0 +1,55 @@
+---
+- name: Download and unpack acme-dns
+  ansible.builtin.unarchive:
+    src: "{{ acme_dns_download_url }}"
+    remote_src: true
+    dest: /tmp
+    include:
+      - acme-dns
+    creates: /tmp/acme-dns
+
+- name: Copy acme-dns into place
+  ansible.builtin.copy:
+    src: /tmp/acme-dns
+    remote_src: true
+    dest: /usr/local/bin/acme-dns
+    mode: '0755'
+
+- name: Add acme-dns group
+  ansible.builtin.group:
+    name: "{{ acme_dns_group }}"
+    state: present
+
+- name: Add acme-dns system user
+  ansible.builtin.user:
+    name: "{{ acme_dns_user }}"
+    group: "{{ acme_dns_group }}"
+    system: true
+    home: "{{ acme_dns_home_dir }}"
+    state: present
+
+- name: Create config directory
+  ansible.builtin.file:
+    name: /etc/acme-dns
+    state: directory
+    mode: '0755'
+
+- name: Create config file
+  ansible.builtin.template:
+    src: config.cfg.j2
+    dest: /etc/acme-dns/config.cfg
+    mode: '0644'
+  notify: Restart acme-dns
+
+- name: Create systemd unit file
+  ansible.builtin.template:
+    src: acme-dns.service.j2
+    dest: /etc/systemd/system/acme-dns.service
+    mode: '0644'
+  notify: Reload systemd manager
+
+- name: Enable and start systemd unit
+  ansible.builtin.systemd:
+    name: acme-dns
+    state: started
+    enabled: true

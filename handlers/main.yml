@@ -1,0 +1,9 @@
+---
+- name: Reload systemd manager
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Restart acme-dns
+  ansible.builtin.systemd:
+    name: acme-dns
+    state: restarted

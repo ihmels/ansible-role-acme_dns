@@ -1,0 +1,42 @@
+[general]
+listen = "0.0.0.0:53"
+protocol = "both"
+domain = "{{ acme_dns_domain }}"
+nsname = "{{ acme_dns_domain }}"
+nsadmin = "{{ acme_dns_admin }}"
+records = [
+{% if acme_dns_public_ipv4 %}
+    "{{ acme_dns_domain }}. A {{ acme_dns_public_ipv4 }}",
+{% endif %}
+{% if acme_dns_public_ipv6 %}
+    "{{ acme_dns_domain }}. AAAA {{ acme_dns_public_ipv6 }}",
+{% endif %}
+    "{{ acme_dns_domain }}. NS {{ acme_dns_domain }}.",
+]
+debug = false
+
+[database]
+engine = "sqlite3"
+connection = "{{ acme_dns_home_dir }}/acme-dns.db"
+
+[api]
+ip = "0.0.0.0"
+disable_registration = {{ acme_dns_disable_registration | string | lower }}
+port = "443"
+tls = "{{ acme_dns_tls }}"
+{% if acme_dns_tls_cert_privkey %}
+tls_cert_privkey = "{{ acme_dns_tls_cert_privkey }}"
+{% endif %}
+{% if acme_dns_tls_cert_fullchain %}
+tls_cert_fullchain = "{{ acme_dns_tls_cert_fullchain }}"
+{% endif %}
+acme_cache_dir = "api-certs"
+notification_email = "{{ acme_dns_acme_email }}"
+corsorigins = ["*"]
+use_header = false
+header_name = "X-Forwarded-For"
+
+[logconfig]
+loglevel = "{{ acme_dns_log_level }}"
+logtype = "stdout"
+logformat = "text"

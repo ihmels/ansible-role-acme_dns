@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include ihmels.acme_dns"
+      ansible.builtin.include_role:
+        name: "ihmels.acme_dns"

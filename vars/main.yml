@@ -1,0 +1,2 @@
+---
+acme_dns_download_url: "https://github.com/joohoi/acme-dns/releases/download/v{{ acme_dns_version }}/acme-dns_{{ acme_dns_version }}_linux_amd64.tar.gz"
